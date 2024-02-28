@@ -1,0 +1,17 @@
+﻿// this is the used sql for this project.
+
+
+create table Users(
+	Username varchar(255),
+	Password varchar(255)
+	);
+
+
+
+create or alter procedure GetLogin @username varchar(255)
+as
+begin
+select * from users where username = @username
+end
+go
+

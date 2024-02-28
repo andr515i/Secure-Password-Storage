@@ -1,4 +1,8 @@
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
+using Secure_Password_Storage.models;
+
 namespace Secure_Password_Storage
 {
 	public class Program
@@ -13,7 +17,19 @@ namespace Secure_Password_Storage
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-
+			builder.Services.AddCors(options =>
+			{
+				options.AddDefaultPolicy(builder =>
+				{
+					builder.AllowAnyOrigin()
+						   .AllowAnyHeader()
+						   .AllowAnyMethod();
+				});
+			});
+			builder.Services.AddDbContext<DataContext>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("connString"));
+			});
 			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
@@ -23,12 +39,17 @@ namespace Secure_Password_Storage
 				app.UseSwaggerUI();
 			}
 
+			
+
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
 
+			app.UseCors();
 
 			app.MapControllers();
+
+
 
 			app.Run();
 		}
